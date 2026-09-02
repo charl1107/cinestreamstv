@@ -1,33 +1,28 @@
 package com.cinestreamtv.extension.api
 
-import kotlinx.serialization.Serializable
-
-@Serializable
 open class LoadResponse(
-    val name: String,
-    val url: String,
-    val apiName: String,
-    val type: TvType,
-    val posterUrl: String? = null,
-    val year: Int? = null,
-    val plot: String? = null,
-    val rating: Int? = null,
-    val tags: List<String>? = null,
-    val duration: Int? = null,
-    val trailerUrl: String? = null,
-    val recommendations: List<SearchResponse>? = null,
-    val actors: List<ActorInfo>? = null,
-    val backgroundPosterUrl: String? = null
+    open val name: String,
+    open val url: String,
+    open val apiName: String,
+    open val type: TvType,
+    open val posterUrl: String? = null,
+    open val year: Int? = null,
+    open val plot: String? = null,
+    open val rating: Int? = null,
+    open val tags: List<String>? = null,
+    open val duration: Int? = null,
+    open val trailerUrl: String? = null,
+    open val recommendations: List<SearchResponse>? = null,
+    open val actors: List<ActorInfo>? = null,
+    open val backgroundPosterUrl: String? = null
 )
 
-@Serializable
 data class ActorInfo(
     val name: String,
     val image: String? = null,
     val roleString: String? = null
 )
 
-@Serializable
 class MovieLoadResponse(
     name: String,
     url: String,
@@ -44,11 +39,22 @@ class MovieLoadResponse(
     actors: List<ActorInfo>? = null,
     backgroundPosterUrl: String? = null
 ) : LoadResponse(
-    name, url, apiName, TvType.Movie, posterUrl, year, plot,
-    rating, tags, duration, trailerUrl, recommendations, actors, backgroundPosterUrl
+    name = name,
+    url = url,
+    apiName = apiName,
+    type = TvType.Movie,
+    posterUrl = posterUrl,
+    year = year,
+    plot = plot,
+    rating = rating,
+    tags = tags,
+    duration = duration,
+    trailerUrl = trailerUrl,
+    recommendations = recommendations,
+    actors = actors,
+    backgroundPosterUrl = backgroundPosterUrl
 )
 
-@Serializable
 class TvSeriesLoadResponse(
     name: String,
     url: String,
@@ -66,11 +72,22 @@ class TvSeriesLoadResponse(
     backgroundPosterUrl: String? = null,
     val seasonNames: List<SeasonData>? = null
 ) : LoadResponse(
-    name, url, apiName, TvType.TvSeries, posterUrl, year, plot,
-    rating, tags, duration, trailerUrl, recommendations, actors, backgroundPosterUrl
+    name = name,
+    url = url,
+    apiName = apiName,
+    type = TvType.TvSeries,
+    posterUrl = posterUrl,
+    year = year,
+    plot = plot,
+    rating = rating,
+    tags = tags,
+    duration = duration,
+    trailerUrl = trailerUrl,
+    recommendations = recommendations,
+    actors = actors,
+    backgroundPosterUrl = backgroundPosterUrl
 )
 
-@Serializable
 data class TvSeriesEpisode(
     val name: String? = null,
     val season: Int? = null,
@@ -82,7 +99,6 @@ data class TvSeriesEpisode(
     val date: String? = null
 )
 
-@Serializable
 data class SeasonData(
     val season: Int,
     val name: String? = null,

@@ -1,8 +1,5 @@
 package com.cinestreamtv.core.domain.model
 
-import kotlinx.serialization.Serializable
-
-@Serializable
 data class StreamLink(
     val url: String,
     val name: String,
@@ -14,7 +11,6 @@ data class StreamLink(
     val referer: String? = null
 )
 
-@Serializable
 data class SubtitleTrack(
     val url: String,
     val language: String,
@@ -22,7 +18,6 @@ data class SubtitleTrack(
     val mimeType: String? = null
 )
 
-@Serializable
 data class AudioTrack(
     val id: String,
     val language: String,

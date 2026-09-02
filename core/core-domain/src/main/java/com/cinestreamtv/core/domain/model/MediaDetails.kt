@@ -1,8 +1,5 @@
 package com.cinestreamtv.core.domain.model
 
-import kotlinx.serialization.Serializable
-
-@Serializable
 data class MediaDetails(
     val item: MediaItem,
     val plot: String? = null,
@@ -15,7 +12,6 @@ data class MediaDetails(
     val data: String = ""
 )
 
-@Serializable
 data class ActorData(
     val name: String,
     val role: String? = null,

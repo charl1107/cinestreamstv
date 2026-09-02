@@ -1,20 +1,16 @@
 package com.cinestreamtv.extension.api
 
-import kotlinx.serialization.Serializable
-
-@Serializable
 open class SearchResponse(
-    val name: String,
-    val url: String,
-    val apiName: String,
-    val type: TvType? = null,
-    val posterUrl: String? = null,
-    val year: Int? = null,
-    val quality: SearchQuality? = null,
-    val posterHeaders: Map<String, String>? = null
+    open val name: String,
+    open val url: String,
+    open val apiName: String,
+    open val type: TvType? = null,
+    open val posterUrl: String? = null,
+    open val year: Int? = null,
+    open val quality: SearchQuality? = null,
+    open val posterHeaders: Map<String, String>? = null
 )
 
-@Serializable
 enum class SearchQuality {
     Cam, CamRip, HdCam,
     Telecine, Telesync,

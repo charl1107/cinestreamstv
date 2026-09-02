@@ -1,8 +1,5 @@
 package com.cinestreamtv.core.domain.model
 
-import kotlinx.serialization.Serializable
-
-@Serializable
 data class Episode(
     val season: Int,
     val episode: Int,
@@ -14,7 +11,6 @@ data class Episode(
     val airDate: String? = null
 )
 
-@Serializable
 data class Season(
     val seasonNumber: Int,
     val name: String? = null,
