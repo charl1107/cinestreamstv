@@ -1,0 +1,8 @@
+<resources>
+    <style name="Theme.CineStreamTV" parent="@style/Theme.Leanback">
+        <item name="android:colorPrimary">#FF6200EE</item>
+        <item name="android:colorPrimaryDark">#FF121212</item>
+        <item name="android:colorAccent">#FFBB86FC</item>
+        <item name="android:windowBackground">#FF121212</item>
+    </style>
+</resources>
