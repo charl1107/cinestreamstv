@@ -32,7 +32,19 @@ class ExtensionViewModel @Inject constructor(
 
     init {
         refreshRepos()
+        observePlugins()
         refreshPlugins()
+    }
+
+    private fun observePlugins() {
+        viewModelScope.launch {
+            extensionManager.availablePlugins.collect { plugins ->
+                _uiState.value = _uiState.value.copy(
+                    isLoading = false,
+                    availablePlugins = plugins
+                )
+            }
+        }
     }
 
     fun refreshPlugins() {
@@ -40,12 +52,6 @@ class ExtensionViewModel @Inject constructor(
             _uiState.value = _uiState.value.copy(isLoading = true, error = null)
             try {
                 extensionManager.refreshAvailablePlugins()
-                extensionManager.availablePlugins.collect { plugins ->
-                    _uiState.value = _uiState.value.copy(
-                        isLoading = false,
-                        availablePlugins = plugins
-                    )
-                }
             } catch (e: Exception) {
                 _uiState.value = _uiState.value.copy(
                     isLoading = false,

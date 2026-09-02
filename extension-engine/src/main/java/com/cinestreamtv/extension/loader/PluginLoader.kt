@@ -50,20 +50,66 @@ class PluginLoader @Inject constructor(
     
     suspend fun loadPlugin(entry: PluginEntry, file: File): Result<LoadedPlugin> = withContext(Dispatchers.IO) {
         runCatching {
-            val classLoader = PathClassLoader(
+            var pluginClassName: String? = null
+            
+            // Extract manifest.json from the .cs3 zip archive if present
+            try {
+                java.util.zip.ZipFile(file).use { zip ->
+                    val manifestEntry = zip.getEntry("manifest.json")
+                    if (manifestEntry != null) {
+                        val manifestJsonStr = zip.getInputStream(manifestEntry).bufferedReader().use { it.readText() }
+                        // Quick extract pluginClassName
+                        val match = Regex(""""pluginClassName"\s*:\s*"([^"]+)"""").find(manifestJsonStr)
+                        if (match != null) {
+                            pluginClassName = match.groupValues[1]
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                // Fallback if not a zip
+            }
+
+            val classLoader = dalvik.system.DexClassLoader(
                 file.absolutePath,
+                context.codeCacheDir.absolutePath,
+                null,
                 context.classLoader
             )
             
-            // Load the plugin class - convention: package.PluginName
-            val className = "com.cinestreamtv.plugins.${entry.internalName}.${entry.internalName}Plugin"
-            val pluginClass = classLoader.loadClass(className)
-            val pluginInstance = pluginClass.getDeclaredConstructor().newInstance()
+            val candidates = listOfNotNull(
+                pluginClassName,
+                "com.cinestreamtv.plugins.${entry.internalName}.${entry.internalName}Plugin",
+                "${entry.internalName}Plugin",
+                entry.internalName
+            )
             
-            val providers = if (pluginInstance is MainAPI) {
-                listOf(pluginInstance)
-            } else {
-                emptyList()
+            var pluginInstance: Any? = null
+            var lastError: Throwable? = null
+            for (candidate in candidates) {
+                try {
+                    val pluginClass = classLoader.loadClass(candidate)
+                    pluginInstance = pluginClass.getDeclaredConstructor().newInstance()
+                    break
+                } catch (e: Throwable) {
+                    lastError = e
+                }
+            }
+
+            val providers = mutableListOf<MainAPI>()
+            if (pluginInstance is MainAPI) {
+                providers.add(pluginInstance)
+            } else if (pluginInstance != null) {
+                // Check if it has a load or register method
+                try {
+                    val loadMethod = pluginInstance.javaClass.methods.firstOrNull { it.name == "load" }
+                    if (loadMethod != null) {
+                        if (loadMethod.parameterTypes.size == 1 && loadMethod.parameterTypes[0].isAssignableFrom(Context::class.java)) {
+                            loadMethod.invoke(pluginInstance, context)
+                        } else if (loadMethod.parameterTypes.isEmpty()) {
+                            loadMethod.invoke(pluginInstance)
+                        }
+                    }
+                } catch (_: Throwable) {}
             }
             
             val loaded = LoadedPlugin(

@@ -102,6 +102,43 @@ fun HomeScreen(
             }
         }
 
+        // Empty State (No extensions installed or no content yet)
+        if (!uiState.isLoading && uiState.error == null && uiState.homePageData.rows.isEmpty() && uiState.homePageData.heroItems.isEmpty() && uiState.continueWatching.isEmpty()) {
+            item {
+                Box(
+                    modifier = Modifier.fillMaxWidth().padding(top = 48.dp, bottom = 48.dp, start = 48.dp, end = 48.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Card(
+                        onClick = onExtensionsClick,
+                        modifier = Modifier.widthIn(max = 600.dp)
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(32.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(
+                                text = "Welcome to CineStreamTV",
+                                style = MaterialTheme.typography.headlineMedium,
+                                fontWeight = FontWeight.Bold
+                            )
+                            Spacer(modifier = Modifier.height(12.dp))
+                            Text(
+                                text = "No content providers are installed yet. Browse and install extensions from MegaRepo to start watching.",
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = Color.White.copy(alpha = 0.8f),
+                                textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                            )
+                            Spacer(modifier = Modifier.height(24.dp))
+                            Button(onClick = onExtensionsClick) {
+                                Text("🧩  Browse Extensions")
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         // Loading State
         if (uiState.isLoading) {
             item {
